@@ -8,10 +8,7 @@ Advent of Code 2023 in Modern Java (WiP)
 
 ## How to build and run
 
-Build with IntelliJ IDEA using a Java 22 SDK, such as Amazon Corretto.
-
-Then run in IntelliJ or as follows from the command line:
-
 ```
+$ javac src/main/java/Day5.java --enable-preview --release 22
 $ java --enable-preview -cp target/classes Day5
 ```
