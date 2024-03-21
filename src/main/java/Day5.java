@@ -1,55 +1,42 @@
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.*;
-import java.util.regex.*;
+import java.util.function.Function;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 import java.util.stream.*;
 
 public class Day5 {
 
+  public static void main(String[] args) throws Throwable {
+    final var input = Files
+        .newBufferedReader(Paths.get("data/day5input.txt"))
+        .lines()
+        .iterator();
+
+    final var result = process(input);
+
+    System.out.println(result[0]); // 174137457
+    System.out.println(result[1]); // 1493866
+
+  }
+
   private static final Pattern number = Pattern.compile("(\\d+)");
 
-  public static List<Long> makeSeq(final Iterator<String> input) {
-    final var line = input.next();
+  static List<Long> getNumbersFromLine(final String line) {
     final var matcher = number.matcher(line);
-    final var result = matcher
+    return matcher
         .results()
         .map(MatchResult::group)
         .map(Long::parseLong)
         .toList();
-    input.next(); // skip blank line
-    return result;
   }
 
-  public static Optional<Function<Long, Long>> makeMap(final Iterator<String> input) {
-    if (!input.hasNext()) return Optional.empty();
-
-    input.next(); // skip section header
-
-    final var stream = StreamSupport.stream(
-        Spliterators.spliteratorUnknownSize(input, Spliterator.ORDERED),
-        false);
-
-    final var ranges = stream
-        .takeWhile(line -> !line.isEmpty())
-        .map(line -> {
-          final var matcher = number.matcher(line);
-          final var nums = matcher
-              .results()
-              .map(MatchResult::group)
-              .map(Long::parseLong)
-              .toList();
-          return new Triple(nums.get(0), nums.get(1), nums.get(2));
-        })
-        .toList();
-
-    return Optional.of(i ->
-        ranges
-            .stream()
-            .filter(r -> r.start <= i && i < r.start + r.length)
-            .findFirst()
-            .map(r -> r.base + i - r.start)
-            .orElse(i)
-    );
+  static List<Long> makeSeq(final Iterator<String> input) {
+    final var line = input.next();
+    final var result = getNumbersFromLine(line);
+    input.next(); // skip blank line
+    return result;
   }
 
   static class Triple {
@@ -74,15 +61,34 @@ public class Day5 {
     }
   }
 
-  // Methods to process parts 1 and 2, and the main method, would follow a similar translation pattern
-  // This includes converting iterator operations, mapping, and reducing functions into Java's stream API equivalents where applicable
+  static Optional<Function<Long, Long>> makeMap(final Iterator<String> input) {
+    if (!input.hasNext()) return Optional.empty();
 
-  public static void main(String[] args) throws Throwable {
-    final var input = Files
-        .newBufferedReader(Paths.get("data/day5input.txt"))
-        .lines()
-        .iterator();
+    input.next(); // skip section header
 
+    final var stream = StreamSupport.stream(
+        Spliterators.spliteratorUnknownSize(input, Spliterator.ORDERED),
+        false);
+
+    final var ranges = stream
+        .takeWhile(line -> !line.isEmpty())
+        .map(line -> {
+          final var nums = getNumbersFromLine(line);
+          return new Triple(nums.get(0), nums.get(1), nums.get(2));
+        })
+        .toList();
+
+    return Optional.of(i ->
+        ranges
+            .stream()
+            .filter(r -> r.start <= i && i < r.start + r.length)
+            .findFirst()
+            .map(r -> r.base + i - r.start)
+            .orElse(i)
+    );
+  }
+
+  static long[] process(final Iterator<String> input) {
     final var seeds = makeSeq(input);
     final var allMaps = Stream
         .generate(() -> makeMap(input))
@@ -97,12 +103,12 @@ public class Day5 {
 
     final var part1 = seeds
         .stream()
-        .map(seedToLocation)
+        .map(seedToLocation::apply)
         .min(Long::compare)
         .get();
-    System.out.println(part1); // 174137457
+    System.err.println(STR."part1: \{part1}");
 
-//    https://cr.openjdk.org/~vklang/gatherers/api/java.base/java/util/stream/Gatherers.html
+    //    https://cr.openjdk.org/~vklang/gatherers/api/java.base/java/util/stream/Gatherers.html
     final var part2 = seeds
         .stream()
         .gather(Gatherers.windowFixed(2))
@@ -110,12 +116,14 @@ public class Day5 {
           final var head = p.getFirst();
           return LongStream
               .range(head, head + p.getLast())
-              .map(s -> seedToLocation.apply(s))
+              .map(seedToLocation::apply)
               .min()
               .getAsLong();
         })
         .min(Long::compare)
         .get();
-    System.out.println(part2); // 1493866
+
+      System.err.println(STR."part2: \{part2}");
+      return new long[] {part1, part2};
   }
 }
