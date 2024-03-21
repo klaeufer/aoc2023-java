@@ -8,8 +8,10 @@ Advent of Code 2023 in Modern Java (WiP)
 
 ## How to build and run
 
-```
-$ mvn package
-$ java -cp target/aoc2023-0.1-SNAPSHOT.jar --enable-preview Day5
-```
+Build with IntelliJ IDEA using a Java 22 SDK, such as Amazon Corretto.
 
+Then run in IntelliJ or as follows from the command line:
+
+```
+$ java --enable-preview -cp target/classes Day5
+```
