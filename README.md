@@ -10,5 +10,5 @@ Advent of Code 2023 in Modern Java (WiP)
 
 ```
 $ javac src/main/java/Day5.java --enable-preview --release 22
-$ java --enable-preview -cp target/classes Day5
+$ java --enable-preview -cp src/main/java Day5
 ```
