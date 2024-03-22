@@ -15,8 +15,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <java.version>22</java.version>
   </properties>
 
   <dependencies>
@@ -42,15 +41,18 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.12.0</version>
           <configuration>
             <release>22</release>
-            <compilerArgs>--enable-preview</compilerArgs>
+	    <enablePreview>true</enablePreview>
           </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+	  <configuration>
+            <argLine>--enable-preview</argLine>
+	  </configuration>
+	  <version>2.22.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>

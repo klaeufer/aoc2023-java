@@ -9,6 +9,6 @@ Advent of Code 2023 in Modern Java (WiP)
 ## How to build and run
 
 ```
-$ javac src/main/java/Day5.java --enable-preview --release 22
-$ java --enable-preview -cp src/main/java Day5
+$ mvn test
+$ MAVEN_OPTS="--enable-preview" mvn exec:java -Dexec.mainClass=Day5
 ```
