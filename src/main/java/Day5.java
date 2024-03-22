@@ -89,7 +89,7 @@ public class Day5 {
         .get();
     System.err.println(STR."part1: \{part1}");
 
-    //    https://cr.openjdk.org/~vklang/gatherers/api/java.base/java/util/stream/Gatherers.html
+    //  https://cr.openjdk.org/~vklang/gatherers/api/java.base/java/util/stream/Gatherers.html
     final var part2 = seeds
         .stream()
         .gather(Gatherers.windowFixed(2))
@@ -104,7 +104,7 @@ public class Day5 {
         .min(Long::compare)
         .get();
 
-      System.err.println(STR."part2: \{part2}");
-      return new Result(part1, part2);
+    System.err.println(STR."part2: \{part2}");
+    return new Result(part1, part2);
   }
 }
