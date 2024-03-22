@@ -1,13 +1,19 @@
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 public class Day5Test {
 
   @Test
   public void testExample() {
-    final var multilineString = """
+    final var input = Arrays.stream(example.split("\n")).iterator();
+    final var result = Day5.process(input);
+
+    assert result.part1() == 35L : "unexpected result is " + result.part1();
+    assert result.part2() == 46L : "unexpected result is " + result.part2();
+  }
+
+  static final String example = """
 seeds: 79 14 55 13
 
 seed-to-soil map:
@@ -42,11 +48,4 @@ humidity-to-location map:
 60 56 37
 56 93 4
 """;
-
-    final var input = Arrays.stream(multilineString.split("\n")).iterator();
-    final var result = Day5.process(input);
-
-    assert result[0] == 35 : "unexpected result is " + result[0];
-    assert result[1] == 46 : "unexpected result is " + result[1];
-  }
 }

@@ -16,9 +16,8 @@ public class Day5 {
 
     final var result = process(input);
 
-    System.out.println(result[0]); // 174137457
-    System.out.println(result[1]); // 1493866
-
+    System.out.println(result.part1); // 174137457
+    System.out.println(result.part2); // 1493866
   }
 
   private static final Pattern number = Pattern.compile("(\\d+)");
@@ -39,27 +38,7 @@ public class Day5 {
     return result;
   }
 
-  static class Triple {
-    long base, start, length;
-
-    public Triple(long base, long start, long length) {
-      this.base = base;
-      this.start = start;
-      this.length = length;
-    }
-
-    public String toString() {
-      final var sb = new StringBuilder();
-      sb.append("<b=");
-      sb.append(base);
-      sb.append(",s=");
-      sb.append(start);
-      sb.append(",l=");
-      sb.append(length);
-      sb.append(">");
-      return sb.toString();
-    }
-  }
+   record Triple(long base, long start, long length) {}
 
   static Optional<Function<Long, Long>> makeMap(final Iterator<String> input) {
     if (!input.hasNext()) return Optional.empty();
@@ -88,7 +67,9 @@ public class Day5 {
     );
   }
 
-  static long[] process(final Iterator<String> input) {
+  record Result(long part1, long part2) {}
+
+  static Result process(final Iterator<String> input) {
     final var seeds = makeSeq(input);
     final var allMaps = Stream
         .generate(() -> makeMap(input))
@@ -124,6 +105,6 @@ public class Day5 {
         .get();
 
       System.err.println(STR."part2: \{part2}");
-      return new long[] {part1, part2};
+      return new Result(part1, part2);
   }
 }
