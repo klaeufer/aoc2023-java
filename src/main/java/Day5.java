@@ -38,7 +38,7 @@ public class Day5 {
     return result;
   }
 
-   record Triple(long base, long start, long length) {}
+  record Triple(long base, long start, long length) {}
 
   static Optional<Function<Long, Long>> makeMap(final Iterator<String> input) {
     if (!input.hasNext()) return Optional.empty();
