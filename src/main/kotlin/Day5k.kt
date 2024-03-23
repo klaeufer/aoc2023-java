@@ -9,12 +9,11 @@ object Day5k {
 
     val number = """(\d+)""".toRegex()
 
-    fun makeSeq(input: Iterator<String>): Sequence<Long> =
-        sequence {
-            val list = number.findAll(input.next()).map { it.value.toLong() }.toList()
-            yieldAll(list)
-            input.next() // skip blank line
-        }
+    fun makeSeq(input: Iterator<String>): List<Long> {
+        val list = number.findAll(input.next()).map { it.value.toLong() }.toList()
+        input.next() // skip blank line
+        return list
+    }
 
     fun makeMap(input: Iterator<String>): ((Long) -> Long)? =
         if (input.hasNext()) {
@@ -35,7 +34,7 @@ object Day5k {
         } else null
 
     fun process(input: Iterator<String>): Pair<Long, Long> {
-        val seeds = makeSeq(input).toList()
+        val seeds = makeSeq(input)
         val allMaps = generateSequence { makeMap(input) }
         val seedToLocation = allMaps.toList().reversed().reduce { f, g -> { f(g(it)) } }
         val part1 = seeds.map(seedToLocation).minOrNull() ?: 0
