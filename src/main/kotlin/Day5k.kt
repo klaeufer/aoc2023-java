@@ -28,15 +28,15 @@ object Day5k {
             ;
             { i: Long ->
                 ranges
-                    .find { (_, s, l) -> (s until s + l).contains(i) }
+                    .find { (_, s, l) -> (s until s + l).contains(i) } // more performant?
+//                    .find { (_, s, l) -> s <= i && i < s + l } // 500 MB -> 3 GB over 30 sec
                     .let { if (it != null) it.first + i - it.second else i }
             }
         } else null
 
     fun process(input: Iterator<String>): Pair<Long, Long> {
         val seeds = makeSeq(input)
-        val allMaps = generateSequence { makeMap(input) }
-        val seedToLocation = allMaps.toList().reversed().reduce { f, g -> { f(g(it)) } }
+        val seedToLocation = generateSequence { makeMap(input) }.reduce { f, g -> { g(f(it)) } }
         val part1 = seeds.map(seedToLocation).minOrNull() ?: 0
         val part2 = seeds.windowed(2, 2).map { p ->
             (p.first() until p.first() + p.last()).map(seedToLocation).minOrNull() ?: 0

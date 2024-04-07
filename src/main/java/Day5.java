@@ -60,7 +60,8 @@ public class Day5 {
     return Optional.of(i ->
         ranges
             .stream()
-            .filter(r -> r.start <= i && i < r.start + r.length)
+//            .filter(r -> r.start <= i && i < r.start + r.length)
+            .filter(r -> LongStream.range(r.start, r.start + r.length).anyMatch(j -> j == i)) // more performant?
             .findFirst()
             .map(r -> r.base + i - r.start)
             .orElse(i)
@@ -71,15 +72,11 @@ public class Day5 {
 
   static Result process(final Iterator<String> input) {
     final var seeds = makeSeq(input);
-    final var allMaps = Stream
+    final var seedToLocation = Stream
         .generate(() -> makeMap(input))
         .takeWhile(Optional::isPresent)
         .map(Optional::get)
-        .collect(Collectors.toList()); // DO NOT replace with a simple toList()
-    Collections.reverse(allMaps);      // for reverse to work!
-    final var seedToLocation = allMaps
-        .stream()
-        .reduce((f, g) -> s -> f.apply(g.apply(s)))
+        .reduce((f, g) -> s -> g.apply(f.apply(s)))
         .get();
 
     final var part1 = seeds

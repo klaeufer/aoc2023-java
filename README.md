@@ -1,6 +1,6 @@
 # aoc2023-java
 
-Advent of Code 2023 in Modern Java (WiP)
+Advent of Code 2023 in Modern Java (WiP) and Kotlin
 
 ## Build status
 
