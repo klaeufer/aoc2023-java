@@ -1,5 +1,5 @@
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
@@ -9,8 +9,7 @@ import java.util.stream.*;
 public class Day5 {
 
   public static void main(String[] args) throws Throwable {
-    final var input = Files
-        .newBufferedReader(Paths.get("data/day5input.txt"))
+    final var input = new BufferedReader(new InputStreamReader(System.in))
         .lines()
         .iterator();
 
@@ -60,8 +59,8 @@ public class Day5 {
     return Optional.of(i ->
         ranges
             .stream()
-//            .filter(r -> r.start <= i && i < r.start + r.length)
-            .filter(r -> LongStream.range(r.start, r.start + r.length).anyMatch(j -> j == i)) // more performant?
+            .filter(r -> r.start <= i && i < r.start + r.length)
+            // .filter(r -> LongStream.range(r.start, r.start + r.length).anyMatch(j -> j == i)) // more performant?
             .findFirst()
             .map(r -> r.base + i - r.start)
             .orElse(i)
@@ -84,7 +83,7 @@ public class Day5 {
         .map(seedToLocation::apply)
         .min(Long::compare)
         .get();
-    System.err.println(STR."part1: \{part1}");
+    System.err.println(String.format("part1: %d", part1));
 
     //  https://cr.openjdk.org/~vklang/gatherers/api/java.base/java/util/stream/Gatherers.html
     final var part2 = seeds
@@ -93,7 +92,7 @@ public class Day5 {
         .map(p -> {
           final var head = p.getFirst();
           return LongStream
-              .range(head, head + p.getLast())
+              .iterate(head, i -> i < head + p.getLast(), i -> i + 1)
               .map(seedToLocation::apply)
               .min()
               .getAsLong();
@@ -101,7 +100,7 @@ public class Day5 {
         .min(Long::compare)
         .get();
 
-    System.err.println(STR."part2: \{part2}");
+    System.err.println(String.format("part2: %d", part2));
     return new Result(part1, part2);
   }
 }
